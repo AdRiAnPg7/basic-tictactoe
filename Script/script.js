@@ -5,11 +5,13 @@
 const selectBox = document.querySelector(".select-box");
 const selectBtnX = selectBox.querySelector(".options .playerX");
 const selectBtnO = selectBox.querySelector(".options .playerO");
+const selectSize = document.querySelector(".list-boards");
 
 // Game
 const playBoard = document.querySelector(".play-board");
 const players = document.querySelector(".players");
-const allBox = document.querySelectorAll("section span");
+const playArea = document.querySelector(".play-area");
+var allBox;
 
 // Result
 const resultBox = document.querySelector(".result-box");
@@ -26,7 +28,7 @@ const oSign = "O";
 var playerSign = xSign;
 var runBot = true;
 
-
+var sizeBoard = 2;
 
 // Options
 selectBtnX.onclick = () => {
@@ -37,6 +39,7 @@ selectBtnO.onclick = () => {
     goToGameBoard();
     players.setAttribute("class", "players active player");
 }
+
 
 // Go To
 function goToGameBoard() {
@@ -114,37 +117,82 @@ function bot() {
 }
 
 // Validators
-function getIdVal(classname) {
-    return document.querySelector(".box" + classname).id;
+function checkRows(playerSign) {
+    var isWinner = false;
+    var cont;
+    
+    allBox.forEach((box, i) => {
+        if (i % sizeBoard === 0)
+            cont = 0;
+
+        if (playerSign === box.id)
+            cont++;
+
+        if (cont === sizeBoard)
+            isWinner = true;
+    });
+    return isWinner;
 }
 
-function checkIdSign(val1, val2, val3, sign) {
-    return (getIdVal(val1) == sign &&
-        getIdVal(val2) == sign &&
-        getIdVal(val3) == sign);
+function checkColumns(playerSign) {
+    var cont;
+
+    for (let i = 0; i < sizeBoard; i++) {
+        cont = 0;
+        for (let j = 0; j < sizeBoard; j++) {
+            if (allBox[i + j * sizeBoard].id === playerSign)
+                cont++;
+        }
+        if (cont === sizeBoard)
+            return true;
+    }
+    return false;
+}
+
+function checkDiagonals(playerSign) {
+    var cont = 0;
+
+    for (let i = 0; i < sizeBoard; i++) {
+        if (allBox[(sizeBoard + 1) * i].id === playerSign)
+            cont++;
+    }
+
+
+    if (cont === sizeBoard)
+        return true;
+
+
+    cont = 0;
+
+    for (let i = 0; i < sizeBoard; i++) {
+        if (allBox[(sizeBoard - 1) * (i + 1)].id === playerSign)
+            cont++;
+    }
+
+    if (cont === sizeBoard)
+        return true;
+
+    return false;
 }
 
 function checkWinner(playerSign) {
-    return (checkIdSign(1, 2, 3, playerSign) ||
-        checkIdSign(4, 5, 6, playerSign) ||
-        checkIdSign(7, 8, 9, playerSign) ||
-        checkIdSign(1, 4, 7, playerSign) ||
-        checkIdSign(2, 5, 8, playerSign) ||
-        checkIdSign(3, 6, 9, playerSign) ||
-        checkIdSign(1, 5, 9, playerSign) ||
-        checkIdSign(3, 5, 7, playerSign));
+    return (checkRows(playerSign) ||
+        checkColumns(playerSign) ||
+        checkDiagonals(playerSign));
 }
 
 function checkTie() {
-    return (getIdVal(1) != "" &&
-        getIdVal(2) != "" &&
-        getIdVal(3) != "" &&
-        getIdVal(4) != "" &&
-        getIdVal(5) != "" &&
-        getIdVal(6) != "" &&
-        getIdVal(7) != "" &&
-        getIdVal(8) != "" &&
-        getIdVal(9) != "");
+    var isTie = false;
+    var cont = 0;
+    
+    allBox.forEach((box, i) => {
+        if (box.id === xSign || box.id === oSign)
+            cont++;
+
+        if (cont === allBox.length)
+            isTie = true;
+    });
+    return isTie;
 }
 
 function selectWinner() {
@@ -165,14 +213,46 @@ function selectWinner() {
     }
 }
 
+//
+function getSizeBoard(element){
+    sizeBoard = parseInt(element.value);
+    setupBoard();
+}
+
 // Replay
 replayBtn.onclick = () => {
     window.location.reload();
 }
 
 // Setup
-window.onload = () => {
-    for (let i = 0; i < allBox.length; i++){
+function setupDropBox(){
+    selectSize.setAttribute("onchange", "getSizeBoard(this)");
+}
+
+function setupBoard(){
+    ///
+    var cont = '1';
+    var boxes = '';
+
+    for (let i = 0; i < sizeBoard; i++){
+        boxes += '<section>';
+        for (let j = 0; j < sizeBoard; j++){
+            boxes+=`<span class="box${cont}"></span>`;
+            cont++;
+        }
+        boxes += '</section>'
+    }
+
+    playArea.innerHTML = boxes;
+    allBox = document.querySelectorAll("section span");
+
+    for (let i = 0; i < allBox.length; i++) {
         allBox[i].setAttribute("onclick", "clickedBox(this)");
     }
+}
+
+
+window.onload = () => {
+    setupDropBox();
+    setupBoard();
 }

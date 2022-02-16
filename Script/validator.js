@@ -2,7 +2,7 @@ export function getIdVal(classname) {
    return document.querySelector(".box" + classname).id;
 }
 
-function checkIdSign(val1, val2, val3, sign) {
+export function checkIdSign(val1, val2, val3, sign) {
    return (getIdVal(val1) == sign &&
        getIdVal(val2) == sign &&
        getIdVal(val3) == sign);
