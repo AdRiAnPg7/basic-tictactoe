@@ -157,10 +157,8 @@ function checkDiagonals(playerSign) {
             cont++;
     }
 
-
     if (cont === sizeBoard)
         return true;
-
 
     cont = 0;
 
@@ -230,7 +228,12 @@ function setupDropBox(){
 }
 
 function setupBoard(){
-    ///
+    setupBoxes();
+    allBox = document.querySelectorAll("section span");
+    setupSpanItems();
+}
+
+function setupBoxes(){
     var cont = '1';
     var boxes = '';
 
@@ -244,8 +247,9 @@ function setupBoard(){
     }
 
     playArea.innerHTML = boxes;
-    allBox = document.querySelectorAll("section span");
+}
 
+function setupSpanItems(){
     for (let i = 0; i < allBox.length; i++) {
         allBox[i].setAttribute("onclick", "clickedBox(this)");
     }
