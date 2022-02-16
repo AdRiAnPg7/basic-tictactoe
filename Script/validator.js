@@ -1,32 +1,75 @@
-export function getIdVal(classname) {
-   return document.querySelector(".box" + classname).id;
+export function checkRows(playerSign) {
+   var isWinner = false;
+   var cont;
+   
+   allBox.forEach((box, i) => {
+       if (i % sizeBoard === 0)
+           cont = 0;
+
+       if (playerSign === box.id)
+           cont++;
+
+       if (cont === sizeBoard)
+           isWinner = true;
+   });
+   return isWinner;
 }
 
-function checkIdSign(val1, val2, val3, sign) {
-   return (getIdVal(val1) == sign &&
-       getIdVal(val2) == sign &&
-       getIdVal(val3) == sign);
+export function checkColumns(playerSign) {
+   var cont;
+
+   for (let i = 0; i < sizeBoard; i++) {
+       cont = 0;
+       for (let j = 0; j < sizeBoard; j++) {
+           if (allBox[i + j * sizeBoard].id === playerSign)
+               cont++;
+       }
+       if (cont === sizeBoard)
+           return true;
+   }
+   return false;
+}
+
+export function checkDiagonals(playerSign) {
+   var cont = 0;
+
+   for (let i = 0; i < sizeBoard; i++) {
+       if (allBox[(sizeBoard + 1) * i].id === playerSign)
+           cont++;
+   }
+
+   if (cont === sizeBoard)
+       return true;
+
+   cont = 0;
+
+   for (let i = 0; i < sizeBoard; i++) {
+       if (allBox[(sizeBoard - 1) * (i + 1)].id === playerSign)
+           cont++;
+   }
+
+   if (cont === sizeBoard)
+       return true;
+
+   return false;
 }
 
 export function checkWinner(playerSign) {
-   return (checkIdSign(1, 2, 3, playerSign) ||
-       checkIdSign(4, 5, 6, playerSign) ||
-       checkIdSign(7, 8, 9, playerSign) ||
-       checkIdSign(1, 4, 7, playerSign) ||
-       checkIdSign(2, 5, 8, playerSign) ||
-       checkIdSign(3, 6, 9, playerSign) ||
-       checkIdSign(1, 5, 9, playerSign) ||
-       checkIdSign(3, 5, 7, playerSign));
+   return (checkRows(playerSign) ||
+       checkColumns(playerSign) ||
+       checkDiagonals(playerSign));
 }
 
 export function checkTie() {
-   return (getIdVal(1) != "" &&
-       getIdVal(2) != "" &&
-       getIdVal(3) != "" &&
-       getIdVal(4) != "" &&
-       getIdVal(5) != "" &&
-       getIdVal(6) != "" &&
-       getIdVal(7) != "" &&
-       getIdVal(8) != "" &&
-       getIdVal(9) != "");
+   var isTie = false;
+   var cont = 0;
+   
+   allBox.forEach((box, i) => {
+       if (box.id === xSign || box.id === oSign)
+           cont++;
+
+       if (cont === allBox.length)
+           isTie = true;
+   });
+   return isTie;
 }

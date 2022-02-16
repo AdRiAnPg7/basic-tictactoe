@@ -47,6 +47,7 @@ body{
   display: flex;
   width: 100%;
 }
+
 .options button{
   width: 100%;
   font-size: 20px;
@@ -60,6 +61,7 @@ body{
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .options button:hover,
 .btn button:hover{
   transform: scale(0.96);
@@ -70,6 +72,27 @@ body{
 .options button.playerO{
   margin-left: 5px;
 }
+
+.content select{
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  text-align: center;
+  border: none;
+  background: #323232;
+  border-radius: 5px;
+  color: #D7BC93;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+option:hover{
+  background-color:yellow !important;
+}
+
 
 /* Game */
 .play-board{
